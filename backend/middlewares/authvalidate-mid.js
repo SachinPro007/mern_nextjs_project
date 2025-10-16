@@ -7,8 +7,14 @@ const signupValidateMid = (req, res, next) => {
     signupValidate.parse(req.body);
     next();
 
-  } catch (error) {
-    ZodStructureErorrs(res, error)
+  } catch (error) {    
+    // console.log(ZodStructureErorrs(res, error));
+    const validationErrors = error.issues.map(issue => ({
+      path: issue.path.join('.'),
+      message: issue.message
+    }));
+
+    next(validationErrors)
   }
 };
 
@@ -20,7 +26,13 @@ const loginValidateMid = (req, res, next) => {
     next()
 
   } catch (error) {
-    ZodStructureErorrs(res, error)
+    // ZodStructureErorrs(res, error)
+    const validationErrors = error.issues.map(issue => ({
+      path: issue.path.join('.'),
+      message: issue.message
+    }));
+
+    next(validationErrors)
   }
 }
 
