@@ -1,6 +1,8 @@
 
-const jwt = require("jsonwebtoken")
+const jwt = require("jsonwebtoken");
+const { ZodError } = require("zod");
 
+// generate jwt token
 const generateToken = (user) => {
   return jwt.sign(
     {
@@ -13,4 +15,25 @@ const generateToken = (user) => {
   )
 }
 
-module.exports = {generateToken}
+// structure zod errors on geting validation
+const ZodStructureErorrs = (res, error) => {
+  if (error instanceof ZodError) {
+
+    const validationErrors = error.issues.map(issue => ({
+      path: issue.path.join('.'), // Field name
+      message: issue.message      // Error message
+    }));
+
+    return res.status(400).json({
+      message: "Validation failed",
+      errors: validationErrors
+    });
+
+  } else {
+    console.error("An unexpected error occurred:", error);
+    return res.status(500).json({ message: "Internal Server Error" });
+  }
+
+}
+
+module.exports = {generateToken, ZodStructureErorrs}
