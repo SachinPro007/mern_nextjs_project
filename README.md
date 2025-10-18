@@ -1,0 +1,3 @@
+## Getting Started
+
+This is a full-stack, work-in-progress application built using the $\text{MERN}$ stack ($\text{MongoDB}$, $\text{Express}$, $\text{React}$ ($\text{via Next.js}$), $\text{Node.js}$) with $\text{Next.js}$ powering the frontend. The project is currently under active development, and this $\text{README}$ will be updated with comprehensive documentation, setup instructions, and feature explanations upon completion of the core application.
