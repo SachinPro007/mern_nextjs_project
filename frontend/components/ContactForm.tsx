@@ -3,15 +3,15 @@ import React, { ChangeEvent, FormEvent, useState } from "react";
 import { contactSubmit } from "../app/actions/contactAction";
 
 export interface ContactFormData {
-  userName: string,
-  email: string,
-  message: string,
+  userName: string;
+  email: string;
+  message: string;
 }
 
 interface Errors {
-  userName?: string,
-  email?: string,
-  message?: string,
+  userName?: string;
+  email?: string;
+  message?: string;
 }
 
 function ContactForm({ isLoading = false }) {
@@ -24,7 +24,9 @@ function ContactForm({ isLoading = false }) {
   const [errors, setErrors] = useState<Errors>({});
   const [isSubmitted, setIsSubmitted] = useState(false);
 
-  const handleChange = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+  const handleChange = (
+    e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
+  ) => {
     const { name, value } = e.target;
     setFormData((prev) => ({
       ...prev,
@@ -81,9 +83,8 @@ function ContactForm({ isLoading = false }) {
         setTimeout(() => {
           setIsSubmitted(false);
         }, 5000);
-      }else{
+      } else {
         console.log("Something went wrong");
-        
       }
     }
   };
@@ -103,8 +104,8 @@ function ContactForm({ isLoading = false }) {
       <div className="text-center mb-8">
         <h2 className="text-3xl font-bold text-gray-800 mb-2">Get In Touch</h2>
         <p className="text-gray-600">
-          We&#39d love to hear from you. Send us a message and we&#39ll respond as
-          soon as possible.
+          We&#39d love to hear from you. Send us a message and we&#39ll respond
+          as soon as possible.
         </p>
       </div>
 

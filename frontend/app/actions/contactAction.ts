@@ -1,21 +1,18 @@
-import {ContactFormData} from '@/components/ContactForm'
-
+import { ContactFormData } from "@/components/ContactForm";
 
 const contactSubmit = async (formData: ContactFormData) => {
   const res = await fetch("http://localhost:4000/api/form", {
     method: "POST",
     headers: {
-      "Content-Type": "application/json"
+      "Content-Type": "application/json",
     },
-    body: JSON.stringify(formData)
-  })
+    body: JSON.stringify(formData),
+  });
 
-  if(res.ok){
-    const data = await res.json()
-    return data
-
+  if (res.ok) {
+    const data = await res.json();
+    return data;
   }
-}
+};
 
-
-export {contactSubmit}
+export { contactSubmit };

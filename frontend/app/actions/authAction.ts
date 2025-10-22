@@ -1,12 +1,12 @@
-"use server"
+"use server";
 
 import { redirect } from "next/navigation";
-import { cookies } from "next/headers"
+import { cookies } from "next/headers";
 import { LoginFormData } from "@/components/LoginForm";
 import { RegisterFormData } from "@/components/RegisterForm";
 
 const loginSubmit = async (formData: LoginFormData) => {
-  const cookiesStore = await cookies()
+  const cookiesStore = await cookies();
 
   const res = await fetch("http://localhost:4000/api/auth/login", {
     method: "POST",
@@ -18,16 +18,13 @@ const loginSubmit = async (formData: LoginFormData) => {
 
   if (res.ok) {
     const data = await res.json();
-    cookiesStore.set("token", data.token, { httpOnly: true })
-    redirect("/")
-
+    cookiesStore.set("token", data.token, { httpOnly: true });
+    redirect("/");
   } else {
     const errorData = await res.json();
     console.error("Login failed:", errorData);
   }
-
 };
- 
 
 const registerSubmit = async (formData: RegisterFormData) => {
   const res = await fetch("http://localhost:4000/api/auth/register", {
@@ -40,17 +37,15 @@ const registerSubmit = async (formData: RegisterFormData) => {
 
   if (res.ok) {
     const data = await res.json();
-    
+
     if (data.success) {
-      await loginSubmit(formData)
+      await loginSubmit(formData);
     } else {
-      return data
+      return data;
     }
   } else {
-    return await res.json()
+    return await res.json();
   }
-}
+};
 
-
-
-export { loginSubmit, registerSubmit }
+export { loginSubmit, registerSubmit };

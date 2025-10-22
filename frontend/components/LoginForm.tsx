@@ -4,13 +4,13 @@ import { ChangeEvent, FormEvent, useState } from "react";
 import { loginSubmit } from "../app/actions/authAction";
 
 export interface LoginFormData {
-  email: string,
-  password: string
+  email: string;
+  password: string;
 }
 
 interface Errors {
-  email?: string,
-  password?: string
+  email?: string;
+  password?: string;
 }
 
 function LoginForm({ isLoading = false }) {
