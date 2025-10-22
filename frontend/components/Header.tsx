@@ -46,6 +46,7 @@ const Header: React.FC<HeaderProps> = ({
 
   let a = 5
   a = "string"
+  a = true
   
   return (
     <header className="bg-white shadow-lg border-b border-gray-200">
