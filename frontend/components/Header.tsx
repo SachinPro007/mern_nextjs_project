@@ -44,6 +44,9 @@ const Header: React.FC<HeaderProps> = ({
     router.push(path);
   };
 
+  let a = 5
+  a = "string"
+  
   return (
     <header className="bg-white shadow-lg border-b border-gray-200">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -75,6 +78,8 @@ const Header: React.FC<HeaderProps> = ({
               ))}
             </nav>
           </div>
+
+          <img src="https://th.bing.com/th/id/OIP.RmHiXlb-j0Zqs48eCdG7sQHaHa?w=182&h=182&c=7&r=0&o=7&cb=12&pid=1.7&rm=3" alt="" />
 
           {/* Right Section - User Menu and Mobile Button */}
           <div className="flex items-center space-x-4">
