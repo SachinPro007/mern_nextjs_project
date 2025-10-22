@@ -1,26 +1,36 @@
 "use client";
 
-import { useState } from "react";
-import { loginSubmit } from "../app/actions/loginAction";
+import { ChangeEvent, FormEvent, useState } from "react";
+import { loginSubmit } from "../app/actions/authAction";
+
+export interface LoginFormData {
+  email: string,
+  password: string
+}
+
+interface Errors {
+  email?: string,
+  password?: string
+}
 
 function LoginForm({ isLoading = false }) {
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState<LoginFormData>({
     email: "",
     password: "",
   });
 
-  const [errors, setErrors] = useState({});
+  const [errors, setErrors] = useState<Errors>({});
   const [showPassword, setShowPassword] = useState(false);
   const [rememberMe, setRememberMe] = useState(false);
 
-  const handleChange = (e) => {
+  const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setFormData((prev) => ({
       ...prev,
       [name]: value,
     }));
     // Clear error when user starts typing
-    if (errors[name]) {
+    if (errors[name as keyof Errors]) {
       setErrors((prev) => ({
         ...prev,
         [name]: "",
@@ -29,7 +39,7 @@ function LoginForm({ isLoading = false }) {
   };
 
   const validateForm = () => {
-    const newErrors = {};
+    const newErrors: Errors = {};
 
     if (!formData.email.trim()) {
       newErrors.email = "email or email is required";
@@ -43,7 +53,7 @@ function LoginForm({ isLoading = false }) {
     return Object.keys(newErrors).length === 0;
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     if (validateForm()) {

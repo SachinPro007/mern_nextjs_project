@@ -1,25 +1,41 @@
 "use client";
-import { useState } from "react";
+import { ChangeEvent, FormEvent, useState } from "react";
+import { registerSubmit } from "../app/actions/authAction";
 
-const CreateUserForm = ({isLoading = false }) => {
-  const [formData, setFormData] = useState({
+export interface RegisterFormData {
+  userName: string;
+  email: string;
+  password: string;
+  confirmPassword: string;
+}
+
+interface Errors {
+  userName?: string;
+  email?: string;
+  password?: string;
+  confirmPassword?: string;
+  userExist?: string;
+}
+
+function RegisterForm({ isLoading = false }) {
+  const [formData, setFormData] = useState<RegisterFormData>({
     userName: "",
     email: "",
     password: "",
     confirmPassword: "",
   });
 
-  const [errors, setErrors] = useState({});
+  const [errors, setErrors] = useState<Errors>({});
   const [showPassword, setShowPassword] = useState(false);
 
-  const handleChange = (e) => {
+  const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setFormData((prev) => ({
       ...prev,
       [name]: value,
     }));
     // Clear error when user starts typing
-    if (errors[name]) {
+    if (errors[name as keyof Errors]) {
       setErrors((prev) => ({
         ...prev,
         [name]: "",
@@ -28,7 +44,7 @@ const CreateUserForm = ({isLoading = false }) => {
   };
 
   const validateForm = () => {
-    const newErrors = {};
+    const newErrors: Errors = {};
 
     if (!formData.userName.trim()) {
       newErrors.userName = "UserName is required";
@@ -56,29 +72,13 @@ const CreateUserForm = ({isLoading = false }) => {
     return Object.keys(newErrors).length === 0;
   };
 
-  const handleSubmit = async(e) => {
+  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (validateForm()) {
-      const res = await fetch("http://localhost:4000/api/auth/register", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify({...formData, isAdmin: false})
-      })
-
-      const data = await res.json()
-      console.log("server res" ,res);
-
-      console.log("data", data);
-      
-
-
-
-      
-    };
+      const res = await registerSubmit(formData);
+      setErrors({ ...errors, userExist: res.message });
+    }
   };
-
 
   return (
     <div className="flex h-screen justify-center items-center">
@@ -266,6 +266,11 @@ const CreateUserForm = ({isLoading = false }) => {
             )}
           </button>
         </form>
+        {errors.userExist && (
+          <p className="mt-4 text-center text-sm text-red-600">
+            {errors.userExist}
+          </p>
+        )}
 
         {/* Additional Info */}
         <div className="mt-4 text-center text-sm text-gray-600">
@@ -274,6 +279,6 @@ const CreateUserForm = ({isLoading = false }) => {
       </div>
     </div>
   );
-};
+}
 
-export default CreateUserForm;
+export default RegisterForm;

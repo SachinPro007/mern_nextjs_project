@@ -35,7 +35,7 @@ const LoginPage = () => {
 
       <div className="mt-6 text-center">
         <p className="text-sm text-gray-600">
-          Don't have an account?{" "}
+          Don`t have an account?{" "}
           <button
             type="button"
             className="font-medium text-blue-600 hover:text-blue-500"
