@@ -44,9 +44,10 @@ const Header: React.FC<HeaderProps> = ({
     router.push(path);
   };
 
-  let a = 5;
+  let a = 5
 
-  a = "sacjin";
+  a = "sacjin"
+  a = true
 
   return (
     <header className="bg-white shadow-lg border-b border-gray-200">
