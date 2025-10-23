@@ -1,3 +1,2 @@
-echo "--- HUSKY PRE-COMMIT HOOK IS RUNNING ---"
 npm run lint:staged
 tsc --noEmit

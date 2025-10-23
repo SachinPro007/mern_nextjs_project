@@ -10,4 +10,4 @@ const buildPrettierCommand = (filenames) =>
 
 module.exports = {
   "*.{js,jsx,ts,tsx}": [buildEslintCommand, buildPrettierCommand],
-};
+}; 

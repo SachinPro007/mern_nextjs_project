@@ -10,7 +10,8 @@
     "lint:fix": "next lint --fix",
     "format": "prettier . --write",
     "format:check": "prettier . --check",
-    "lint:staged": "lint-staged"
+    "lint:staged": "lint-staged",
+    "prepare": "husky"
   },
   "dependencies": {
     "next": "15.5.6",

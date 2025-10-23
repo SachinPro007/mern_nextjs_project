@@ -9,10 +9,9 @@ const eslintConfig = [
   ...compat.config({
     extends: ["next/core-web-vitals", "next/typescript"],
     rules: {
-      // "@next/next/no-img-element": "error"
+      "@next/next/no-img-element": "error"
     }
-  }
-  ),
+  }),
   {
     ignores: [
       "node_modules/**",
