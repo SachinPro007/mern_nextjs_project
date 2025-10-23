@@ -10,8 +10,7 @@
     "lint:fix": "next lint --fix",
     "format": "prettier . --write",
     "format:check": "prettier . --check",
-    "lint:staged": "lint-staged",
-    "prepare": "husky"
+    "lint:staged": "lint-staged"
   },
   "dependencies": {
     "next": "15.5.6",
@@ -26,8 +25,6 @@
     "@types/react-dom": "^19",
     "eslint": "^9.38.0",
     "eslint-config-next": "^15.5.6",
-    "husky": "^9.1.7",
-    "lint-staged": "^16.2.5",
     "prettier": "^3.6.2",
     "tailwindcss": "^4",
     "typescript": "^5"
