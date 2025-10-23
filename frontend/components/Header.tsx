@@ -44,11 +44,6 @@ const Header: React.FC<HeaderProps> = ({
     router.push(path);
   };
 
-  let a = 5
-
-  a = "sacjin"
-  a = true
-
   return (
     <header className="bg-white shadow-lg border-b border-gray-200">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -80,11 +75,6 @@ const Header: React.FC<HeaderProps> = ({
               ))}
             </nav>
           </div>
-
-          <img
-            src="https://th.bing.com/th/id/OIP.3I2V0G6W020pqddb_hhbMQHaEK?w=321&h=180&c=7&r=0&o=7&cb=12&pid=1.7&rm=3"
-            alt=""
-          />
 
           {/* Right Section - User Menu and Mobile Button */}
           <div className="flex items-center space-x-4">
