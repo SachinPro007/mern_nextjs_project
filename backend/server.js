@@ -1,4 +1,5 @@
 const express = require("express");
+const cookieParser = require("cookie-parser")
 const cors = require("cors")
 const authRouter = require("./routes/auth-route");
 const contactRouter = require("./routes/contact-route");
@@ -19,6 +20,7 @@ app.use(cors(corsOptions))
 
 //
 app.use(express.json())
+app.use(cookieParser())
 
 connectDB()
 

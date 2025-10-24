@@ -1,6 +1,7 @@
 "use client";
-import React, { ChangeEvent, FormEvent, useState } from "react";
+import React, { ChangeEvent, FormEvent, useEffect, useState } from "react";
 import { contactSubmit } from "../app/actions/contactAction";
+import { getUser } from "@/app/actions/authAction";
 
 export interface ContactFormData {
   userName: string;
@@ -23,6 +24,11 @@ function ContactForm({ isLoading = false }) {
 
   const [errors, setErrors] = useState<Errors>({});
   const [isSubmitted, setIsSubmitted] = useState(false);
+
+  // fetch loged user
+  useEffect(() => {
+    getUser();
+  }, []);
 
   const handleChange = (
     e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,

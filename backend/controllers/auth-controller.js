@@ -47,40 +47,47 @@ const register = async (req, res) => {
 
 const login = async (req, res) => {
   try {
-    const {email, password} = req.body
-    const userExist = await UserModel.findOne({email})    
+    const { email, password } = req.body
 
-    if(!userExist){
-      return res.status(401).json({success: false, message: "Invalid user"})
+    const userExist = await UserModel.findOne({ email })
+
+    if (!userExist) {
+      return res.status(401).json({ success: false, message: "Invalid user" })
     }
 
     const user = await bcrypt.compare(password, userExist.password)
 
-    if(!user){
-      return res.status(401).json({success: false, message: "Invalid User"})
+    if (!user) {
+      return res.status(401).json({ success: false, message: "Invalid User" })
     }
 
-    if(userExist.isAdmin){
-      return res.status(200).json({
-      success: true, 
-      message: "Admin Login successful", 
-      token: generateToken(userExist), 
-      userID: userExist._id.toString()
-    })
-    }
-    
+    const userToken = generateToken(userExist)
+    res.cookie("token", userToken)
+
     return res.status(200).json({
-      success: true, 
-      message: "Login successful", 
-      token: generateToken(userExist), 
+      success: true,
+      message: "Login successful",
+      token: userToken,
       userID: userExist._id.toString()
     })
 
-    
+
   } catch (error) {
     return res.status(500).json({ success: false, message: error.message })
   }
 }
 
+const user = async (req, res) => {
 
-module.exports = { auth, register, login }
+  try {
+    const userData = req.user;
+    return res.status(200).json({ success: true, user: userData })
+
+  } catch (error) {
+    return res.status(500).json({ success: false, message: error.message })
+  }
+
+}
+
+
+module.exports = { auth, register, login, user }

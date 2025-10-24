@@ -1,13 +1,12 @@
 "use server";
 
 import { redirect } from "next/navigation";
-import { cookies } from "next/headers";
 import { LoginFormData } from "@/components/LoginForm";
 import { RegisterFormData } from "@/components/RegisterForm";
+import { cookies, headers } from "next/headers";
 
 const loginSubmit = async (formData: LoginFormData) => {
-  const cookiesStore = await cookies();
-
+  const cookiesStore = cookies();
   const res = await fetch("http://localhost:4000/api/auth/login", {
     method: "POST",
     headers: {
@@ -16,13 +15,15 @@ const loginSubmit = async (formData: LoginFormData) => {
     body: JSON.stringify(formData),
   });
 
-  if (res.ok) {
+  if (res.status === 200) {
     const data = await res.json();
-    cookiesStore.set("token", data.token, { httpOnly: true });
+    (await cookiesStore).set("token", data.token);
+
     redirect("/");
   } else {
     const errorData = await res.json();
     console.error("Login failed:", errorData);
+    return errorData;
   }
 };
 
@@ -48,4 +49,25 @@ const registerSubmit = async (formData: RegisterFormData) => {
   }
 };
 
-export { loginSubmit, registerSubmit };
+const getUser = async () => {
+  const headersCookies = (await headers()).get("cookie");
+
+  try {
+    const res = await fetch("http://localhost:4000/api/auth/user", {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        ...(headersCookies && { cookie: headersCookies }),
+      },
+      credentials: "include",
+    });
+    if (res.status === 200) {
+      const user = await res.json();
+      console.log(user);
+    }
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export { loginSubmit, registerSubmit, getUser };

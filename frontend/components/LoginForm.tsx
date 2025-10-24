@@ -11,6 +11,7 @@ export interface LoginFormData {
 interface Errors {
   email?: string;
   password?: string;
+  resMsg?: string;
 }
 
 function LoginForm({ isLoading = false }) {
@@ -42,7 +43,9 @@ function LoginForm({ isLoading = false }) {
     const newErrors: Errors = {};
 
     if (!formData.email.trim()) {
-      newErrors.email = "email or email is required";
+      newErrors.email = "Email is required";
+    } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
+      newErrors.email = "Email is invalid";
     }
 
     if (!formData.password) {
@@ -53,11 +56,14 @@ function LoginForm({ isLoading = false }) {
     return Object.keys(newErrors).length === 0;
   };
 
-  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     if (validateForm()) {
-      loginSubmit(formData);
+      const res = await loginSubmit(formData);
+      if (!res.success) {
+        setErrors({ ...errors, resMsg: res.message });
+      }
     }
   };
 
@@ -318,6 +324,10 @@ function LoginForm({ isLoading = false }) {
           )}
         </button>
       </form>
+
+      {errors.resMsg && (
+        <p className="mt-4 text-center text-sm text-red-600">{errors.resMsg}</p>
+      )}
     </>
   );
 }
