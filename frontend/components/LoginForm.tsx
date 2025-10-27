@@ -14,6 +14,12 @@ interface Errors {
   resMsg?: string;
 }
 
+interface Response {
+  success?: boolean;
+  message?: string;
+  errors?: [{ path: string; message: string }];
+}
+
 function LoginForm({ isLoading = false }) {
   const [formData, setFormData] = useState<LoginFormData>({
     email: "",
@@ -39,30 +45,24 @@ function LoginForm({ isLoading = false }) {
     }
   };
 
-  const validateForm = () => {
-    const newErrors: Errors = {};
-
-    if (!formData.email.trim()) {
-      newErrors.email = "Email is required";
-    } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
-      newErrors.email = "Email is invalid";
-    }
-
-    if (!formData.password) {
-      newErrors.password = "Password is required";
-    }
-
-    setErrors(newErrors);
-    return Object.keys(newErrors).length === 0;
-  };
-
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    if (validateForm()) {
-      const res = await loginSubmit(formData);
-      if (!res.success) {
-        setErrors({ ...errors, resMsg: res.message });
+    const res: Response = await loginSubmit(formData);
+    console.log(res);
+
+    if (res) {
+      if (res.errors) {
+        res.errors.forEach((err) => {
+          const { path, message } = err;
+          setErrors((prev) => ({
+            ...prev,
+            resMsg: "Invalid Info",
+            [path]: message,
+          }));
+        });
+      } else {
+        setErrors({ resMsg: res.message });
       }
     }
   };

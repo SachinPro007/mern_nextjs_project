@@ -9,10 +9,8 @@ const contactSubmit = async (formData: ContactFormData) => {
     body: JSON.stringify(formData),
   });
 
-  if (res.ok) {
-    const data = await res.json();
-    return data;
-  }
+  const data = await res.json();
+  return data;
 };
 
 export { contactSubmit };

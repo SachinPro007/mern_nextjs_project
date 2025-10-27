@@ -15,6 +15,12 @@ interface Errors {
   message?: string;
 }
 
+interface Response {
+  success?: boolean;
+  message?: string;
+  errors?: [{ path: string; message: string }];
+}
+
 function ContactForm({ isLoading = false }) {
   const [formData, setFormData] = useState<ContactFormData>({
     userName: "",
@@ -47,51 +53,27 @@ function ContactForm({ isLoading = false }) {
     }
   };
 
-  const validateForm = () => {
-    const newErrors: Errors = {};
-
-    if (!formData.userName.trim()) {
-      newErrors.userName = "Name is required";
-    } else if (formData.userName.length < 2) {
-      newErrors.userName = "Name must be at least 2 characters";
-    }
-
-    if (!formData.email.trim()) {
-      newErrors.email = "Email is required";
-    } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
-      newErrors.email = "Please enter a valid email address";
-    }
-
-    if (!formData.message.trim()) {
-      newErrors.message = "Message is required";
-    } else if (formData.message.length < 10) {
-      newErrors.message = "Message must be at least 10 characters";
-    }
-
-    setErrors(newErrors);
-    return Object.keys(newErrors).length === 0;
-  };
-
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    if (validateForm()) {
-      const res = await contactSubmit(formData);
+    const res: Response = await contactSubmit(formData);
 
-      if (res) {
-        setIsSubmitted(true);
-        setFormData({
-          userName: "",
-          email: "",
-          message: "",
-        });
+    if (res.errors) {
+      res.errors.forEach((err) => {
+        const { path, message } = err;
+        setErrors((prev) => ({ ...prev, [path]: message }));
+      });
+    } else {
+      setIsSubmitted(true);
+      setFormData({
+        userName: "",
+        email: "",
+        message: "",
+      });
 
-        // Hide success message after 5 seconds
-        setTimeout(() => {
-          setIsSubmitted(false);
-        }, 5000);
-      } else {
-        console.log("Something went wrong");
-      }
+      // Hide success message after 5 seconds
+      setTimeout(() => {
+        setIsSubmitted(false);
+      }, 5000);
     }
   };
 

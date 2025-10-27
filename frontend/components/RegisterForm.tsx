@@ -17,6 +17,12 @@ interface Errors {
   userExist?: string;
 }
 
+interface Response {
+  success?: boolean;
+  message?: string;
+  errors?: [{ path: string; message: string }];
+}
+
 function RegisterForm({ isLoading = false }) {
   const [formData, setFormData] = useState<RegisterFormData>({
     userName: "",
@@ -43,40 +49,18 @@ function RegisterForm({ isLoading = false }) {
     }
   };
 
-  const validateForm = () => {
-    const newErrors: Errors = {};
-
-    if (!formData.userName.trim()) {
-      newErrors.userName = "UserName is required";
-    } else if (formData.userName.length < 3) {
-      newErrors.userName = "UserName must be at least 3 characters";
-    }
-
-    if (!formData.email.trim()) {
-      newErrors.email = "Email is required";
-    } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
-      newErrors.email = "Email is invalid";
-    }
-
-    if (!formData.password) {
-      newErrors.password = "Password is required";
-    } else if (formData.password.length < 6) {
-      newErrors.password = "Password must be at least 6 characters";
-    }
-
-    if (formData.password !== formData.confirmPassword) {
-      newErrors.confirmPassword = "Passwords do not match";
-    }
-
-    setErrors(newErrors);
-    return Object.keys(newErrors).length === 0;
-  };
-
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    if (validateForm()) {
-      const res = await registerSubmit(formData);
-      setErrors({ ...errors, userExist: res.message });
+    const res: Response = await registerSubmit(formData);
+    if (res) {
+      if (res.errors) {
+        res.errors.forEach((err) => {
+          const { path, message } = err;
+          setErrors((prev) => ({ ...prev, [path]: message }));
+        });
+      } else {
+        setErrors({ ...errors, userExist: res.message });
+      }
     }
   };
 
