@@ -63,11 +63,17 @@ const getUser = async () => {
     });
     if (res.status === 200) {
       const user = await res.json();
-      console.log(user);
+      return user;
     }
   } catch (error) {
     console.log(error);
   }
 };
 
-export { loginSubmit, registerSubmit, getUser };
+const logoutUser = async () => {
+  const cookiesStore = cookies();
+  (await cookiesStore).delete("token");
+  return true;
+};
+
+export { loginSubmit, registerSubmit, getUser, logoutUser };

@@ -1,12 +1,13 @@
 "use client";
 
+import { getUser, logoutUser } from "@/app/actions/authAction";
 import { useRouter } from "next/navigation";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 interface User {
-  name: string;
-  role: string;
-  email?: string;
+  userName: string;
+  email: string;
+  isAdmin: boolean;
 }
 
 interface navigationLink {
@@ -15,21 +16,29 @@ interface navigationLink {
 }
 
 interface HeaderProps {
-  user?: User;
   logo?: string;
 }
 
-const Header: React.FC<HeaderProps> = ({
-  user = {
-    name: "Sachin",
-    role: "Developer",
-    email: "example@gmail.com",
-  },
-  logo = "MERN",
-}) => {
+const Header: React.FC<HeaderProps> = ({ logo = "MERN" }) => {
   const router = useRouter();
+  const [loggedUser, setLoggedUser] = useState<User>({
+    userName: "",
+    email: "",
+    isAdmin: false,
+  });
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
+
+  useEffect(() => {
+    const fetchUser = async () => {
+      const isLogged = await getUser();
+      if (isLogged) {
+        const { userName, email, isAdmin } = isLogged.user;
+        setLoggedUser({ userName, email, isAdmin });
+      }
+    };
+    fetchUser();
+  }, []);
 
   const navigationLinks: navigationLink[] = [
     { name: "Home", path: "/" },
@@ -42,6 +51,19 @@ const Header: React.FC<HeaderProps> = ({
   const handleNavigation = (path: string) => {
     setIsMobileMenuOpen(false);
     router.push(path);
+  };
+
+  const handleLogout = async () => {
+    const res = await logoutUser();
+
+    if (res) {
+      router.push("/login");
+      setLoggedUser({
+        userName: "",
+        email: "",
+        isAdmin: false,
+      });
+    }
   };
 
   return (
@@ -79,7 +101,7 @@ const Header: React.FC<HeaderProps> = ({
           {/* Right Section - User Menu and Mobile Button */}
           <div className="flex items-center space-x-4">
             {/* Desktop User Menu */}
-            {user && (
+            {loggedUser.userName ? (
               <div className="hidden md:flex items-center space-x-4">
                 {/* Notifications */}
                 <button className="text-gray-400 hover:text-gray-600 p-1 rounded-full hover:bg-gray-100 transition duration-200">
@@ -107,15 +129,15 @@ const Header: React.FC<HeaderProps> = ({
                     <div className="flex items-center space-x-3">
                       <div className="flex flex-col items-end">
                         <span className="text-sm font-medium text-gray-900">
-                          {user.name}
+                          {loggedUser.userName}
                         </span>
                         <span className="text-xs text-gray-500">
-                          {user.role}
+                          {loggedUser.isAdmin}
                         </span>
                       </div>
                       <div className="w-8 h-8 bg-gradient-to-r from-blue-500 to-blue-600 rounded-full flex items-center justify-center">
                         <span className="text-white text-sm font-medium">
-                          {user.name.charAt(0).toUpperCase()}
+                          {loggedUser.userName?.charAt(0).toUpperCase()}
                         </span>
                       </div>
                     </div>
@@ -169,7 +191,10 @@ const Header: React.FC<HeaderProps> = ({
                         <span>Settings</span>
                       </button>
                       <div className="border-t border-gray-200 my-1"></div>
-                      <button className="flex items-center space-x-2 w-full px-4 py-2 text-sm text-red-600 hover:bg-red-50 transition duration-200">
+                      <button
+                        className="flex items-center space-x-2 w-full px-4 py-2 text-sm text-red-600 hover:bg-red-50 transition duration-200"
+                        onClick={handleLogout}
+                      >
                         <svg
                           className="h-4 w-4"
                           fill="none"
@@ -189,6 +214,26 @@ const Header: React.FC<HeaderProps> = ({
                   )}
                 </div>
               </div>
+            ) : (
+              <button
+                className="flex items-center space-x-2 w-full px-4 py-2 text-sm text-green-600 hover:bg-green-50 transition duration-200"
+                onClick={() => router.push("/login")}
+              >
+                <svg
+                  className="h-4 w-4"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"
+                  />
+                </svg>
+                <span>Login</span>
+              </button>
             )}
 
             {/* Mobile menu button */}
@@ -246,7 +291,7 @@ const Header: React.FC<HeaderProps> = ({
               ))}
 
               {/* Mobile User Actions */}
-              {user && (
+              {loggedUser && (
                 <>
                   <div className="border-t border-gray-200 my-2 pt-2">
                     <button
