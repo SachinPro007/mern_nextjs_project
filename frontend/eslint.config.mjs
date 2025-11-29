@@ -9,8 +9,8 @@ const eslintConfig = [
   ...compat.config({
     extends: ["next/core-web-vitals", "next/typescript"],
     rules: {
-      "@next/next/no-img-element": "error"
-    }
+      "@next/next/no-img-element": "error",
+    },
   }),
   {
     ignores: [
@@ -19,7 +19,7 @@ const eslintConfig = [
       "out/**",
       "build/**",
       "next-env.d.ts",
-      ".lintstagedrc.js"
+      ".lintstagedrc.js",
     ],
   },
 ];

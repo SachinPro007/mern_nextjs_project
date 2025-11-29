@@ -1,7 +1,9 @@
+"use server";
+
 import { ContactFormData } from "@/components/ContactForm";
 
 const contactSubmit = async (formData: ContactFormData) => {
-  const res = await fetch("http://localhost:4000/api/form", {
+  const res = await fetch("http://backend:4000/api/form", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",

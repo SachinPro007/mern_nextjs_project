@@ -7,7 +7,7 @@ import { cookies, headers } from "next/headers";
 
 const loginSubmit = async (formData: LoginFormData) => {
   const cookiesStore = cookies();
-  const res = await fetch("http://localhost:4000/api/auth/login", {
+  const res = await fetch("http://backend:4000/api/auth/login", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -28,7 +28,7 @@ const loginSubmit = async (formData: LoginFormData) => {
 };
 
 const registerSubmit = async (formData: RegisterFormData) => {
-  const res = await fetch("http://localhost:4000/api/auth/register", {
+  const res = await fetch("http://backend:4000/api/auth/register", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -53,7 +53,7 @@ const getUser = async () => {
   const headersCookies = (await headers()).get("cookie");
 
   try {
-    const res = await fetch("http://localhost:4000/api/auth/user", {
+    const res = await fetch("http://backend:4000/api/auth/user", {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
