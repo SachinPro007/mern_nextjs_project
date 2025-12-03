@@ -1,5 +1,5 @@
 services:
-  mango:
+  mongo:
     image: mongo
     ports:
       - 27017:27017
@@ -16,10 +16,22 @@ services:
     environment:
       ME_CONFIG_MONGODB_ADMINUSERNAME: admin
       ME_CONFIG_MONGODB_ADMINPASSWORD: qwerty
-      ME_CONFIG_MONGODB_URL: mongodb://admin:qwerty@mango:27017/
+      ME_CONFIG_MONGODB_URL: mongodb://admin:qwerty@mongo:27017/
+
+  backend:
+    build: ./backend
+    ports:
+      - 4000:4000
+    environment:
+      # Tell Backend where the Database is
+      MONGO_URI: mongodb://admin:qwerty@mongo:27017/
+      JWT_SECRET_KEY: my_super_secret_key_123
+      PORT: 4000
+    depends_on:
+      - mongo
 
   frontend:
-    image: mern-frontend
+    build: ./frontend
     ports:
       - 3000:3000
     environment:
@@ -27,14 +39,3 @@ services:
       INTERNAL_API_URL: http://backend:4000 
     depends_on:
       - backend
-
-  backend:
-    image: mern-backend
-    ports:
-      - 4000:4000
-    environment:
-      # Tell Backend where the Database is
-      MONGO_URI: mongodb://admin:qwerty@mango:27017/
-      JWT_SECRET_KEY: my_super_secret_key_123
-    depends_on:
-      - mango
